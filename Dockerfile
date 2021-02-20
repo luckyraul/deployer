@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.6.2
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -27,6 +27,11 @@ RUN apt-get -qqy install curl wget gnupg2 \
   && npm install --global npm \
   && npm install --global gulp-cli
 
+RUN wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
+    unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
+    mv vault /usr/local/bin/vault && \
+    chmod +x /usr/local/bin/vault
+
 RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && curl -ssL -o /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
   && sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list' \
@@ -38,5 +43,5 @@ RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && composer global require phpro/grumphp \
   && composer global require php-parallel-lint/php-parallel-lint \
   && composer global require symfony/console \
-  && composer global require guzzlehttp/guzzle && \
+  && composer global require guzzlehttp/guzzle \
   && echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
