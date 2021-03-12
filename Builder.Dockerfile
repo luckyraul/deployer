@@ -1,0 +1,27 @@
+FROM docker:20-git
+
+MAINTAINER Nikita Tarasov <nikita@mygento.ru>
+
+ENV VAULT_VERSION=1.6.3 WAYPOINT_VERSION=0.2.3 NOMAD_VERSION=1.0.4
+
+RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
+    unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
+    mv vault /usr/local/bin/vault && \
+    chmod +x /usr/local/bin/vault && \
+    rm vault_${VAULT_VERSION}_linux_amd64.zip
+
+RUN wget -q https://releases.hashicorp.com/waypoint/${WAYPOINT_VERSION}/waypoint_${WAYPOINT_VERSION}_linux_amd64.zip && \
+    unzip waypoint_${WAYPOINT_VERSION}_linux_amd64.zip && \
+    mv waypoint /usr/local/bin/waypoint && \
+    chmod +x /usr/local/bin/waypoint && \
+    rm waypoint_${WAYPOINT_VERSION}_linux_amd64.zip
+
+RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk && \
+    apk add glibc-2.33-r0.apk && \
+    wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip && \
+    unzip nomad_${NOMAD_VERSION}_linux_amd64.zip && \
+    mv nomad /usr/local/bin/nomad && \
+    chmod +x /usr/local/bin/nomad && \
+    /usr/local/bin/nomad -v && \
+    rm nomad_${NOMAD_VERSION}_linux_amd64.zip

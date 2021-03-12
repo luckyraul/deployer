@@ -1,4 +1,4 @@
-name: Docker App
+name: Docker Builder
 
 on:
   workflow_dispatch:
@@ -12,24 +12,17 @@ jobs:
     strategy:
       matrix:
         version:
-          - 'v3'
+          - 'dind'
     steps:
       - uses: actions/checkout@v2
       - name: Build Image
-        run: docker build -t mygento/deployer:${{ matrix.version }} -f App.Dockerfile .
-      - name: Test php
-        run: docker run --rm mygento/deployer:${{ matrix.version }} php -v
-      - name: Test node
-        run: docker run --rm mygento/deployer:${{ matrix.version }} node -v
-      - name: Test composer
-        run: docker run --rm mygento/deployer:${{ matrix.version }} composer -V
+        run: docker build -t mygento/deployer:${{ matrix.version }} -f Builder.Dockerfile .
       - name: Test Vault
         run: docker run --rm mygento/deployer:${{ matrix.version }} vault -v
       - name: Test Waypoint
         run: docker run --rm mygento/deployer:${{ matrix.version }} waypoint -v
       - name: Test Nomad
         run: docker run --rm mygento/deployer:${{ matrix.version }} nomad -v
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
