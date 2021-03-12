@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.6.2 WAYPOINT_VERSION=0.2.3
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.6.3 WAYPOINT_VERSION=0.2.3 NOMAD_VERSION=1.0.4
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -38,6 +38,12 @@ RUN wget -q https://releases.hashicorp.com/waypoint/${WAYPOINT_VERSION}/waypoint
     mv waypoint /usr/local/bin/waypoint && \
     chmod +x /usr/local/bin/waypoint && \
     rm waypoint_${WAYPOINT_VERSION}_linux_amd64.zip
+
+RUN wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip && \
+    unzip nomad_${NOMAD_VERSION}_linux_amd64.zip && \
+    mv nomad /usr/local/bin/nomad && \
+    chmod +x /usr/local/bin/nomad && \
+    rm nomad_${NOMAD_VERSION}_linux_amd64.zip
 
 RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && curl -ssL -o /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
