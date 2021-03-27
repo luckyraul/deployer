@@ -27,6 +27,8 @@ RUN apt-get -qqy install curl wget gnupg2 \
   && npm install --global npm \
   && npm install --global gulp-cli
 
+COPY --from=hairyhenderson/gomplate:v3.8.0 /gomplate /bin/gomplate
+
 RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
     unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
     mv vault /usr/local/bin/vault && \
