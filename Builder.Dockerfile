@@ -27,3 +27,5 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     chmod +x /usr/local/bin/nomad && \
     /usr/local/bin/nomad -v && \
     rm nomad_${NOMAD_VERSION}_linux_amd64.zip
+
+RUN apk add --no-cache php-cli php-curl
