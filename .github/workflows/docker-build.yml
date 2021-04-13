@@ -27,6 +27,12 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} gomplate -v
       - name: Test PHP
         run: docker run --rm mygento/deployer:${{ matrix.version }} php -v
+      - name: Test node
+        run: docker run --rm mygento/deployer:${{ matrix.version }} node -v
+      - name: Test npm
+        run: docker run --rm mygento/deployer:${{ matrix.version }} npm -v
+      - name: Test yarn
+        run: docker run --rm mygento/deployer:${{ matrix.version }} yarn -v
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:

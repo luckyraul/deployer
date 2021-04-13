@@ -21,6 +21,8 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} php -v
       - name: Test node
         run: docker run --rm mygento/deployer:${{ matrix.version }} node -v
+      - name: Test npm
+        run: docker run --rm mygento/deployer:${{ matrix.version }} npm -v
       - name: Test composer
         run: docker run --rm mygento/deployer:${{ matrix.version }} composer -V
       - name: Test Vault
