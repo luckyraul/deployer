@@ -57,6 +57,7 @@ RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && chmod +x /usr/local/bin/composer \
   && composer global require phpro/grumphp \
   && composer global require php-parallel-lint/php-parallel-lint \
+  && composer global require jumbojett/openid-connect-php \
   && composer global require symfony/console \
   && composer global require guzzlehttp/guzzle \
   && rm -fR ~/.composer/cache \
