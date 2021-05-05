@@ -34,3 +34,9 @@ RUN apk add --no-cache php-cli php-curl composer && \
     rm -fR ~/.composer/cache
 
 RUN apk add --no-cache nodejs yarn npm
+
+RUN apk add --no-cache ruby ruby-dev ruby-ffi && \
+    gem install specific_install && \
+    gem install -N bundler && \
+    gem specific_install https://github.com/luckyraul/mina.git relative_path && \
+    gem install scss_lint
