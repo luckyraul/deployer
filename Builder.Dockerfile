@@ -2,7 +2,7 @@ FROM docker:20-git
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV VAULT_VERSION=1.7.1 WAYPOINT_VERSION=0.3.2 NOMAD_VERSION=1.0.5
+ENV VAULT_VERSION=1.7.2 WAYPOINT_VERSION=0.4.0 NOMAD_VERSION=1.1.0
 
 COPY --from=hairyhenderson/gomplate:v3.9.0 /gomplate /bin/gomplate
 
