@@ -62,3 +62,5 @@ RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && composer global require guzzlehttp/guzzle \
   && rm -fR ~/.composer/cache \
   && echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
+
+ADD upload_package.php /usr/local/bin/upload_package
