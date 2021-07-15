@@ -13,14 +13,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 $home = getenv('HOME');
 $globalAutoloadFile = $home . '/.composer/vendor/autoload.php';
+$rootAutoloadFile = '/root/.composer/vendor/autoload.php';
 
 if (file_exists('vendor/autoload.php')) {
     require __DIR__ . '/vendor/autoload.php';
 } elseif (file_exists($globalAutoloadFile)) {
     require_once $globalAutoloadFile;
+} elseif (file_exists($rootAutoloadFile)) {
+    require_once $rootAutoloadFile;
 }
 
-class CreateUserCommand extends Command
+class UploadPackageCommand extends Command
 {
     protected static $defaultName = 'upload';
 
@@ -95,7 +98,7 @@ class CreateUserCommand extends Command
             );
 
             try {
-                $response = $client->request('POST', $url . $query, [
+                $client->request('POST', $url . $query, [
                     'body' => $body,
                     'headers' => [
                         'Accept' => 'application/json',
@@ -103,7 +106,6 @@ class CreateUserCommand extends Command
                     ],
                 ]);
                 $output->writeln('uploaded ' . $filename . ' to ' . $service . $url);
-                echo $response->getBody();
             } catch (ClientException $e) {
                 $output->writeln(
                     $service . $url
@@ -136,5 +138,5 @@ class CreateUserCommand extends Command
 }
 
 $application = new Application();
-$application->add(new CreateUserCommand());
+$application->add(new UploadPackageCommand());
 $application->run();
