@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.7.3 WAYPOINT_VERSION=0.4.1 NOMAD_VERSION=1.1.2
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.7.3 WAYPOINT_VERSION=0.4.2 NOMAD_VERSION=1.1.2
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
