@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.8.0 WAYPOINT_VERSION=0.4.2 NOMAD_VERSION=1.1.3
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.9.3 WAYPOINT_VERSION=0.7.1 NOMAD_VERSION=1.2.5
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -27,7 +27,7 @@ RUN apt-get -qqy install curl wget gnupg2 \
   && npm install --global npm \
   && npm install --global gulp-cli
 
-COPY --from=hairyhenderson/gomplate:v3.9.0 /gomplate /bin/gomplate
+COPY --from=hairyhenderson/gomplate:v3.10.0 /gomplate /bin/gomplate
 
 RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
     unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
