@@ -2,9 +2,9 @@ FROM docker:20-git
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV VAULT_VERSION=1.10.0 WAYPOINT_VERSION=0.7.2 NOMAD_VERSION=1.2.6
+ENV VAULT_VERSION=1.11.0 WAYPOINT_VERSION=0.8.2 NOMAD_VERSION=1.3.1
 
-COPY --from=hairyhenderson/gomplate:v3.10.0 /gomplate /bin/gomplate
+COPY --from=hairyhenderson/gomplate:v3.11.1 /gomplate /bin/gomplate
 
 RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
     unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
