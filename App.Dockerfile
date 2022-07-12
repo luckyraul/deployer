@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.11.0 WAYPOINT_VERSION=0.8.2 NOMAD_VERSION=1.3.1
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.11.0 WAYPOINT_VERSION=0.9.0 NOMAD_VERSION=1.3.1
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -18,13 +18,12 @@ RUN apt-get install -qqy sudo git jq unzip binutils ruby ruby-dev build-essentia
     gem specific_install https://github.com/luckyraul/mina.git relative_path && \
     gem install scss_lint
 
-RUN apt-get -qqy install curl wget gnupg2 \
-  && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - \
-  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list \
+RUN apt-get -qqy install curl wget \
   && wget -qO- https://deb.nodesource.com/setup_12.x | bash - \
-  && apt-get -qqy install nodejs yarn \
+  && apt-get -qqy install nodejs \
   && apt-get clean \
   && npm install --global npm \
+  && npm install --global yarn \
   && npm install --global gulp-cli
 
 COPY --from=hairyhenderson/gomplate:v3.11.1 /gomplate /bin/gomplate
