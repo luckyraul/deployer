@@ -2,7 +2,7 @@ FROM docker:20-git
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV VAULT_VERSION=1.11.0 WAYPOINT_VERSION=0.9.0 NOMAD_VERSION=1.3.1
+ENV VAULT_VERSION=1.11.2 WAYPOINT_VERSION=0.9.1 NOMAD_VERSION=1.3.3
 
 COPY --from=hairyhenderson/gomplate:v3.11.1 /gomplate /bin/gomplate
 
@@ -29,7 +29,8 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     /usr/local/bin/nomad -v && \
     rm nomad_${NOMAD_VERSION}_linux_amd64.zip
 
-RUN apk add --no-cache php7-cli php7-json php7-curl php7-iconv php7-mbstring php7-openssl php7-phar php7-zip curl php7-pecl-imagick && \
+RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-openssl php81-phar php81-zip curl php81-pecl-imagick && \
+    ln -s /usr/bin/php81 /usr/bin/php && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \
     composer global require guzzlehttp/guzzle && \

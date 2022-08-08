@@ -10,13 +10,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         version:
-          - 'dind'
+          - 'v3-dind'
+          - 'v4-dind'
     steps:
       - uses: actions/checkout@v2
-      - name: Build Image
-        run: docker build -t mygento/deployer:${{ matrix.version }} -f Builder.Dockerfile .
+      - name: Build Image V3
+        run: docker build -t mygento/deployer:${{ matrix.version }} -f BuilderV3.Dockerfile .
+        if: matrix.version == 'v3-dind'
+      - name: Build Image V4
+        run: docker build -t mygento/deployer:${{ matrix.version }} -f BuilderV4.Dockerfile .
+        if: matrix.version == 'v4-dind'
       - name: Test Vault
         run: docker run --rm mygento/deployer:${{ matrix.version }} vault -v
       - name: Test Waypoint

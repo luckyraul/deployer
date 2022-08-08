@@ -10,13 +10,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         version:
           - 'v3'
+          - 'v4'
     steps:
       - uses: actions/checkout@v2
-      - name: Build Image
-        run: docker build -t mygento/deployer:${{ matrix.version }} -f App.Dockerfile .
+      - name: Build Image V3
+        run: docker build -t mygento/deployer:${{ matrix.version }} -f AppV3.Dockerfile .
+        if: matrix.version == 'v3'
+      - name: Build Image V4
+        run: docker build -t mygento/deployer:${{ matrix.version }} -f AppV4.Dockerfile .
+        if: matrix.version == 'v4'
       - name: Test php
         run: docker run --rm mygento/deployer:${{ matrix.version }} php -v
       - name: Test node
