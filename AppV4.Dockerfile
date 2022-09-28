@@ -2,7 +2,7 @@ FROM debian:bullseye-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.11.2 WAYPOINT_VERSION=0.9.1 NOMAD_VERSION=1.3.3
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.11.3 WAYPOINT_VERSION=0.10.1 NOMAD_VERSION=1.3.5
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -26,7 +26,7 @@ RUN apt-get -qqy install curl wget \
   && npm install --global yarn \
   && npm install --global gulp-cli
 
-COPY --from=hairyhenderson/gomplate:v3.11.2 /gomplate /bin/gomplate
+COPY --from=hairyhenderson/gomplate:v3.11.3 /gomplate /bin/gomplate
 
 RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
     unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
