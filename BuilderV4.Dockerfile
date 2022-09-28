@@ -2,7 +2,7 @@ FROM docker:20-git
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV VAULT_VERSION=1.11.3 WAYPOINT_VERSION=0.10.1 NOMAD_VERSION=1.3.5
+ENV VAULT_VERSION=1.11.3 WAYPOINT_VERSION=0.10.1 NOMAD_VERSION=1.3.5 NOMADPACK_VERSION=0.0.1-techpreview.4
 
 COPY --from=hairyhenderson/gomplate:v3.11.3 /gomplate /bin/gomplate
 
@@ -28,6 +28,12 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     chmod +x /usr/local/bin/nomad && \
     /usr/local/bin/nomad -v && \
     rm nomad_${NOMAD_VERSION}_linux_amd64.zip
+
+RUN wget -q https://github.com/hashicorp/nomad-pack/releases/download/nightly/nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip && \
+    unzip nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip && \
+    mv nomad-pack /usr/local/bin/nomad-pack && \
+    chmod +x /usr/local/bin/nomad-pack && \
+    rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
 RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-openssl php81-phar php81-zip curl php81-pecl-imagick && \
     ln -s /usr/bin/php81 /usr/bin/php && \
