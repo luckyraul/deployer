@@ -19,7 +19,7 @@ RUN apt-get install -qqy sudo git jq unzip binutils ruby ruby-dev build-essentia
     gem install scss_lint
 
 RUN apt-get -qqy install curl wget \
-  && wget -qO- https://deb.nodesource.com/setup_12.x | bash - \
+  && wget -qO- https://deb.nodesource.com/setup_14.x | bash - \
   && apt-get -qqy install nodejs \
   && apt-get clean \
   && npm install --global npm \
