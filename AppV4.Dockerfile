@@ -2,7 +2,7 @@ FROM debian:bullseye-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.11.3 WAYPOINT_VERSION=0.10.1 NOMAD_VERSION=1.3.5 NOMADPACK_VERSION=0.0.1-techpreview.4
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.12.2 WAYPOINT_VERSION=0.10.4 NOMAD_VERSION=1.4.3 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -51,6 +51,12 @@ RUN wget -q https://github.com/hashicorp/nomad-pack/releases/download/nightly/no
     mv nomad-pack /usr/local/bin/nomad-pack && \
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
+
+RUN wget -q https://releases.hashicorp.com/levant/${LEVANT_VERSION}/levant_${LEVANT_VERSION}_linux_amd64.zip && \
+    unzip levant_${LEVANT_VERSION}_linux_amd64.zip && \
+    mv levant /usr/local/bin/levant && \
+    chmod +x /usr/local/bin/levant && \
+    rm levant_${LEVANT_VERSION}_linux_amd64.zip
 
 RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && curl -ssL -o /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \

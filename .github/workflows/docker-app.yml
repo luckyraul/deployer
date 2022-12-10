@@ -35,6 +35,8 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} vault -v
       - name: Test Waypoint
         run: docker run --rm mygento/deployer:${{ matrix.version }} waypoint -v
+      - name: Test Levant
+        run: docker run --rm mygento/deployer:${{ matrix.version }} levant -v
       - name: Test Nomad
         run: docker run --rm mygento/deployer:${{ matrix.version }} nomad -v
       - name: Test Nomad Pack
@@ -73,3 +75,21 @@ jobs:
 
           docker tag $IMAGE_NAME $IMAGE_ID
           docker push $IMAGE_ID
+  post_build:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete untagged ghcr LR
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v2
+        with:
+          token: ${{ secrets.CR_PAT }}
+          repository_owner: ${{ github.repository_owner }}
+          owner_type: user
+          package_name: deployer
+      - name: Delete untagged ghcr Mygento
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v2
+        with:
+          token: ${{ secrets.CR_PAT }}
+          repository_owner: mygento
+          owner_type: org
+          package_name: deployer

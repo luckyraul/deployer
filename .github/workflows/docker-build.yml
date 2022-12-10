@@ -29,6 +29,8 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} waypoint -v
       - name: Test Nomad
         run: docker run --rm mygento/deployer:${{ matrix.version }} nomad -v
+      - name: Test Levant
+        run: docker run --rm mygento/deployer:${{ matrix.version }} levant -v
       - name: Test Nomad Pack
         run: docker run --rm mygento/deployer:${{ matrix.version }} nomad-pack version
       - name: Test Gomplate
