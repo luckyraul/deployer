@@ -2,7 +2,7 @@ FROM debian:bullseye-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.12.2 WAYPOINT_VERSION=0.10.4 NOMAD_VERSION=1.4.3 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.12.2 WAYPOINT_VERSION=0.10.5 NOMAD_VERSION=1.4.3 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \

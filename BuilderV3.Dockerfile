@@ -2,7 +2,7 @@ FROM docker:20-git
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV VAULT_VERSION=1.12.2 WAYPOINT_VERSION=0.10.4 NOMAD_VERSION=1.4.3 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
+ENV VAULT_VERSION=1.12.2 WAYPOINT_VERSION=0.10.5 NOMAD_VERSION=1.4.3 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
 
 COPY --from=hairyhenderson/gomplate:v3.11.3 /gomplate /bin/gomplate
 
@@ -28,6 +28,7 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk && \
     apk del libc6-compat && \
     apk add --no-cache --force-overwrite glibc-2.34-r0.apk && \
+    rm glibc-2.34-r0.apk && \
     wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip && \
     unzip nomad_${NOMAD_VERSION}_linux_amd64.zip && \
     mv nomad /usr/local/bin/nomad && \
