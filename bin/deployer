@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+require __DIR__.'/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+
+use Mygento\Deployer\Command\Build;
+use Mygento\Deployer\Command\Up;
+use Mygento\Deployer\Command\Deploy;
+use Mygento\Deployer\Command\Upload;
+
+const VERSION = '0.0.0';
+
+$application = new Application('Deployer', VERSION);
+$application->add(new Build());
+$application->add(new Deploy());
+$application->add(new Up());
+$application->add(new Upload());
+$application->run();

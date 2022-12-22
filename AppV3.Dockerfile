@@ -14,7 +14,7 @@ RUN apt-get -qq update && \
 RUN apt-get install -qqy sudo git jq unzip binutils ruby ruby-dev build-essential libxml2-utils dh-autoreconf && \
     apt-get clean && \
     gem install specific_install && \
-    gem install --no-rdoc --no-ri bundler && \
+    gem install --no-rdoc --no-ri bundler -v 2.3.26 && \
     gem specific_install https://github.com/luckyraul/mina.git relative_path && \
     gem install scss_lint
 
@@ -62,7 +62,7 @@ RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && curl -ssL -o /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
   && sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list' \
   && apt-get -qq update \
-  && apt-get -qqy install php7.3-cli php7.3-curl php7.3-intl php7.3-xml php7.3-mbstring php7.3-gd php7.3-zip php7.3-imagick \
+  && apt-get -qqy install php7.4-cli php7.4-curl php7.4-intl php7.4-xml php7.4-mbstring php7.4-gd php7.4-zip php7.4-imagick \
   && apt-get clean \
   && curl -L https://getcomposer.org/composer-1.phar -o /usr/local/bin/composer \
   && chmod +x /usr/local/bin/composer \
@@ -72,6 +72,17 @@ RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && composer global require symfony/console \
   && composer global require guzzlehttp/guzzle \
   && rm -fR ~/.composer/cache \
+  && mkdir /opt/deployer \
   && echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
 
 ADD upload_package.php /usr/local/bin/upload_package
+
+ADD composer.json /opt/deployer/composer.json
+ADD bin /opt/deployer/bin/
+ADD src /opt/deployer/src/
+
+RUN cd /opt/deployer/ \
+  && composer install --no-dev \
+  && rm -fR ~/.composer/cache \
+  && echo 'export PATH="$PATH:/opt/deployer/bin"' >> ~/.bashrc \
+  && ln -s /opt/deployer/bin/deployer /usr/local/bin/deployer

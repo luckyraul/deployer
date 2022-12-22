@@ -1,0 +1,23 @@
+{
+    "require": {
+        "symfony/console": "^5.4",
+        "symfony/yaml": "^5.4",
+        "symfony/process": "^5.4",
+        "guzzlehttp/guzzle": "^7.5",
+        "jumbojett/openid-connect-php": "^0.9.10"
+    },
+    "require-dev": {
+        "mygento/symfony-standard": "^5.0.0",
+        "symfony/var-dumper": "5.4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mygento\\Deployer\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpro/grumphp": true
+        }
+    }
+}

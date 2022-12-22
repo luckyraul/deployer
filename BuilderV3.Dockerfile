@@ -42,7 +42,7 @@ RUN wget -q https://github.com/hashicorp/nomad-pack/releases/download/nightly/no
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
-RUN apk add --no-cache php7-json php7-curl php7-iconv php7-mbstring php7-openssl php7-phar php7-zip curl php7-pecl-imagick --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing && \
+RUN apk add --no-cache php7-json php7-curl php7-iconv php7-mbstring php7-openssl php7-simplexml php7-phar php7-zip php7-tokenizer php7-xmlwriter curl php7-pecl-imagick --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing && \
     ln -s /usr/bin/php7 /usr/bin/php && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \
@@ -56,3 +56,16 @@ RUN apk add --no-cache ruby ruby-dev ruby-ffi && \
     gem install -N bundler && \
     gem specific_install https://github.com/luckyraul/mina.git relative_path && \
     gem install scss_lint
+
+ADD upload_package.php /usr/local/bin/upload_package
+
+ADD composer.json /opt/deployer/composer.json
+ADD bin /opt/deployer/bin/
+ADD src /opt/deployer/src/
+
+RUN mkdir -p /opt/deployer \
+  && cd /opt/deployer/ \
+  && composer install --no-dev \
+  && rm -fR ~/.composer/cache \
+  && echo 'export PATH="$PATH:/opt/deployer/bin"' >> ~/.bashrc \
+  && ln -s /opt/deployer/bin/deployer /usr/local/bin/deployer

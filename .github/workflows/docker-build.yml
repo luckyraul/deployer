@@ -41,6 +41,8 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} composer -V
       - name: Test node
         run: docker run --rm mygento/deployer:${{ matrix.version }} /usr/bin/node -v
+      - name: Test Deployer
+        run: docker run --rm mygento/deployer:${{ matrix.version }} deployer -V
       - name: Test npm
         run: docker run --rm mygento/deployer:${{ matrix.version }} npm -v
       - name: Test yarn

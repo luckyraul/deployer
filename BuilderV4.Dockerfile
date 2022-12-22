@@ -42,7 +42,7 @@ RUN wget -q https://github.com/hashicorp/nomad-pack/releases/download/nightly/no
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
-RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-openssl php81-phar php81-zip curl php81-pecl-imagick && \
+RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-simplexml php81-openssl php81-phar php81-zip php81-xmlwriter php81-tokenizer curl php81-pecl-imagick && \
     # ln -s /usr/bin/php81 /usr/bin/php && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \
@@ -51,8 +51,20 @@ RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-openssl php81
 
 RUN apk add --no-cache nodejs yarn npm
 
-RUN apk add --no-cache ruby ruby-dev ruby-ffi && \
+RUN apk add --no-cache ruby && \
     gem install specific_install && \
     gem install -N bundler && \
-    gem specific_install https://github.com/luckyraul/mina.git relative_path && \
-    gem install scss_lint
+    gem specific_install https://github.com/luckyraul/mina.git relative_path
+
+ADD upload_package.php /usr/local/bin/upload_package
+
+ADD composer.json /opt/deployer/composer.json
+ADD bin /opt/deployer/bin/
+ADD src /opt/deployer/src/
+
+RUN mkdir -p /opt/deployer \
+  && cd /opt/deployer/ \
+  && composer install --no-dev \
+  && rm -fR ~/.composer/cache \
+  && echo 'export PATH="$PATH:/opt/deployer/bin"' >> ~/.bashrc \
+  && ln -s /opt/deployer/bin/deployer /usr/local/bin/deployer

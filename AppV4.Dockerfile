@@ -11,12 +11,11 @@ RUN apt-get -qq update && \
   echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
   locale-gen
 
-RUN apt-get install -qqy sudo git jq unzip binutils ruby ruby-dev build-essential libxml2-utils dh-autoreconf && \
+RUN apt-get install -qqy sudo git jq unzip ruby && \
     apt-get clean && \
     gem install specific_install && \
     gem install --no-document bundler && \
-    gem specific_install https://github.com/luckyraul/mina.git relative_path && \
-    gem install scss_lint
+    gem specific_install https://github.com/luckyraul/mina.git relative_path
 
 RUN apt-get -qqy install curl wget \
   && wget -qO- https://deb.nodesource.com/setup_16.x | bash - \
@@ -76,3 +75,13 @@ RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
 
 ADD upload_package.php /usr/local/bin/upload_package
+
+ADD composer.json /opt/deployer/composer.json
+ADD bin /opt/deployer/bin/
+ADD src /opt/deployer/src/
+
+RUN cd /opt/deployer/ \
+  && composer install --no-dev \
+  && rm -fR ~/.composer/cache \
+  && echo 'export PATH="$PATH:/opt/deployer/bin"' >> ~/.bashrc \
+  && ln -s /opt/deployer/bin/deployer /usr/local/bin/deployer

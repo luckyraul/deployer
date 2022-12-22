@@ -1,0 +1,21 @@
+build:
+    - name: image1
+      type: docker
+      file: Dockerfile
+#      path: ''
+      image: 'ssdds'
+      buildkit: false
+    - name: image_push
+      type: docker_push
+      image: "$artifact['image1']"
+      repository: 'xxxx'
+      login: ''
+      password: ''
+deploy:
+    - type: levant
+      template: 'x'
+      variables: 'x'
+      output: 'x'
+    - type: nomad
+      server: 'xxxx'
+      jobspec: 'xxx'
