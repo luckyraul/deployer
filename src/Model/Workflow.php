@@ -11,6 +11,10 @@ class Workflow
 {
     private OutputInterface $output;
 
+    private array $config = [];
+
+    private array $artifacts = [];
+
     public function __construct(OutputInterface $output)
     {
         $this->output = $output;
@@ -53,6 +57,10 @@ class Workflow
             if (!$type) {
                 continue;
             }
+            if ('command' === $type) {
+                $this->cmd($b);
+                continue;
+            }
             if ('docker' === $type) {
                 $this->docker($b);
                 continue;
@@ -85,11 +93,21 @@ class Workflow
             if (!$type) {
                 continue;
             }
+            if ('command' === $type) {
+                $this->cmd($c);
+                continue;
+            }
             if ('levant' === $type) {
                 $this->levant($c);
+                continue;
             }
             if ('nomad' === $type) {
                 $this->nomad($c);
+                continue;
+            }
+            if ('nomad_pack' === $type) {
+                $this->nomadPack($c);
+                continue;
             }
         }
     }
@@ -183,10 +201,76 @@ class Workflow
         $this->execCmd($command, null, $env, null, null);
     }
 
+    private function nomadPack(array $config)
+    {
+        $server = $config['server'] ?? null;
+        $registry = $config['registry'] ?? null;
+        $registryUrl = $config['registry_url'] ?? null;
+        $variables = $config['variables'] ?? [];
+
+        $task = $config['task'] ?? null;
+        if (!$task) {
+            throw new LogicException('invalid config file: nomad pack');
+        }
+
+        if ($registry && $registryUrl) {
+            $registryCommand = [
+                'nomad-pack',
+                'registry',
+                'add',
+                $registry,
+                $registryUrl,
+            ];
+            $this->execCmd($registryCommand, null, null, null, 0);
+        }
+
+        $command = [
+            'nomad-pack',
+            'run',
+            $task,
+            null,
+            null,
+            '--ref=latest',
+        ];
+
+        if ($server) {
+            $command[3] = '--address=' . $server;
+        }
+        if ($registry) {
+            $command[4] = '--registry=' . $registry;
+        }
+        foreach ($variables as $v) {
+            $command[] = '--var';
+            $command[] = $v;
+        }
+        $this->execCmd(array_filter($command), null, null, null, 0);
+    }
+
+    private function cmd(array $config)
+    {
+        $command = $config['command'] ?? null;
+        if (!$command) {
+            throw new LogicException('invalid config file: command');
+        }
+        $directory = $config['directory'] ?? null;
+        if (!is_array($command)) {
+            $command = [$command];
+        }
+        $this->execCmd($command, $directory, null, null, 0);
+    }
+
     private function execCmd(array $command, string $directory = null, array $env = null, $input = null, ?float $timeout = 60)
     {
         $this->output->writeln(implode(' ', $command), OutputInterface::VERBOSITY_DEBUG);
         $process = new Process($command, $directory, $env, $input, $timeout);
+        $process->run(function ($type, $buffer) {
+            $this->output->writeln($buffer);
+            // if (Process::ERR === $type) {
+            //     $this->output->writeln($buffer);
+            // } else {
+            //     $this->output->writeln($buffer);
+            // }
+        });
         $process->mustRun();
         $this->output->writeln($process->getOutput());
     }

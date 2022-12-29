@@ -12,6 +12,8 @@ build:
       login: ''
       password: ''
 deploy:
+    - type: command
+      command: ['composer', 'update']
     - type: levant
       template: 'x'
       variables: 'x'
