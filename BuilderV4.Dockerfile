@@ -47,7 +47,8 @@ RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-simplexml php
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \
     composer global require guzzlehttp/guzzle && \
-    rm -fR ~/.composer/cache
+    rm -fR ~/.composer/cache && \
+    rm -fR ~/.cache/composer
 
 RUN apk add --no-cache nodejs yarn npm
 
@@ -66,5 +67,6 @@ RUN mkdir -p /opt/deployer \
   && cd /opt/deployer/ \
   && composer install --no-dev \
   && rm -fR ~/.composer/cache \
+  && rm -fR ~/.cache/composer \
   && echo 'export PATH="$PATH:/opt/deployer/bin"' >> ~/.bashrc \
   && ln -s /opt/deployer/bin/deployer /usr/local/bin/deployer

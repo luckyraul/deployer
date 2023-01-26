@@ -13,14 +13,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 $home = getenv('HOME');
 $globalAutoloadFile = $home . '/.composer/vendor/autoload.php';
+$globalAutoloadFile2 = $home . '/.config/composer/vendor/autoload.php';
 $rootAutoloadFile = '/root/.composer/vendor/autoload.php';
+$rootAutoloadFile2 = '/root/.config/composer/vendor/autoload.php';
 
 if (file_exists('vendor/autoload.php')) {
     require __DIR__ . '/vendor/autoload.php';
 } elseif (file_exists($globalAutoloadFile)) {
     require_once $globalAutoloadFile;
+} elseif (file_exists($globalAutoloadFile2)) {
+    require_once $globalAutoloadFile2;
 } elseif (file_exists($rootAutoloadFile)) {
     require_once $rootAutoloadFile;
+} elseif (file_exists($rootAutoloadFile2)) {
+    require_once $rootAutoloadFile2;
 }
 
 class UploadPackageCommand extends Command

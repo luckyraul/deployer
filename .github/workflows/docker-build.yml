@@ -39,6 +39,8 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} php -v
       - name: Test Composer
         run: docker run --rm mygento/deployer:${{ matrix.version }} composer -V
+      - name: Test Composer Config
+        run: docker run --rm mygento/deployer:${{ matrix.version }} composer config --list --global
       - name: Test node
         run: docker run --rm mygento/deployer:${{ matrix.version }} /usr/bin/node -v
       - name: Test Deployer

@@ -31,6 +31,8 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} npm -v
       - name: Test composer
         run: docker run --rm mygento/deployer:${{ matrix.version }} composer -V
+      - name: Test Composer Config
+        run: docker run --rm mygento/deployer:${{ matrix.version }} composer config --list --global
       - name: Test Vault
         run: docker run --rm mygento/deployer:${{ matrix.version }} vault -v
       - name: Test Waypoint
