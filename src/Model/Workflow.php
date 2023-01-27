@@ -195,6 +195,7 @@ class Workflow
             'nomad',
             'job',
             'run',
+            '-verbose',
             $job,
         ];
 
@@ -273,6 +274,7 @@ class Workflow
         });
         $process->mustRun();
         $this->output->writeln($process->getOutput());
+        $this->output->writeln('<question>Exit code: ' . $process->getExitCode() . '</question>');
     }
 
     private function hasEnvironments(): bool
