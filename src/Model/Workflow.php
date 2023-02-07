@@ -187,19 +187,20 @@ class Workflow
             throw new LogicException('invalid config file: nomad');
         }
 
-        $env = null;
-        if ($server) {
-            $env = ['NOMAD_ADDR=' . $server];
-        }
         $command = [
             'nomad',
             'job',
             'run',
+            null,
             '-verbose',
             $job,
         ];
 
-        $this->execCmd($command, null, $env, null, null);
+        if ($server) {
+            $command[3] = '--address=' . $server;
+        }
+
+        $this->execCmd(array_filter($command));
     }
 
     private function nomadPack(array $config)
