@@ -47,11 +47,13 @@ class Workflow
 
     private function doBuild()
     {
-        $this->output->writeln([
+        $this->output->writeln(
+            [
             '<bg=blue;fg=white>              </>',
             '<bg=blue;fg=white> Build Phase  </>',
             '<bg=blue;fg=white>              </>',
-        ]);
+            ]
+        );
         foreach ($this->config['build'] ?? [] as $b) {
             $type = $b['type'] ?? null;
             if (!$type) {
@@ -74,11 +76,13 @@ class Workflow
 
     private function doDeploy(?string $environment = null)
     {
-        $this->output->writeln([
+        $this->output->writeln(
+            [
             '<bg=blue;fg=white>              </>',
             '<bg=blue;fg=white> Deploy Phase </>',
             '<bg=blue;fg=white>              </>',
-        ]);
+            ]
+        );
         $commands = $this->config['deploy'];
         if ($this->hasEnvironments() && null !== $environment) {
             $commands = $this->config['deploy'][$environment] ?? [];
@@ -118,14 +122,15 @@ class Workflow
         if (!$name) {
             throw new LogicException('invalid config file: docker');
         }
-        $tag = $config['image'] ?? null;
-        if (!$tag) {
+        $tagN = $config['image'] ?? null;
+        if (!$tagN) {
             throw new LogicException('invalid config file: docker');
         }
-
+        $tag = $this->replaceVars($tagN);
         $directory = $config['path'] ?? null;
         $env = null;
-        if (isset($config['buildkit']) && $config['buildkit']) {
+        $buildkit = $config['buildkit'] ?? true;
+        if ($buildkit) {
             $env['DOCKER_BUILDKIT'] = 1;
         }
         $filename = $config['file'] ?? 'Dockerfile';
@@ -281,6 +286,21 @@ class Workflow
     private function hasEnvironments(): bool
     {
         return array_keys($this->config['deploy']) !== range(0, count($this->config['deploy']) - 1);
+    }
+
+    private function getGitBranch(): ?string
+    {
+        $gitStr = file_get_contents('.git/HEAD');
+        if (!$gitStr) {
+            return null;
+        }
+
+        return str_replace(['ref: refs/heads/', "\n"], '', $gitStr);
+    }
+
+    private function replaceVars(string $text): string
+    {
+        return str_replace('$git[\'branch\']', $this->getGitBranch(), $text);
     }
 
     private function replaceArtifacts(string $text): string
