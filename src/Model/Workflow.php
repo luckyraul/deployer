@@ -49,9 +49,9 @@ class Workflow
     {
         $this->output->writeln(
             [
-            '<bg=blue;fg=white>              </>',
-            '<bg=blue;fg=white> Build Phase  </>',
-            '<bg=blue;fg=white>              </>',
+                '<bg=blue;fg=white>              </>',
+                '<bg=blue;fg=white> Build Phase  </>',
+                '<bg=blue;fg=white>              </>',
             ]
         );
         foreach ($this->config['build'] ?? [] as $b) {
@@ -78,9 +78,9 @@ class Workflow
     {
         $this->output->writeln(
             [
-            '<bg=blue;fg=white>              </>',
-            '<bg=blue;fg=white> Deploy Phase </>',
-            '<bg=blue;fg=white>              </>',
+                '<bg=blue;fg=white>              </>',
+                '<bg=blue;fg=white> Deploy Phase </>',
+                '<bg=blue;fg=white>              </>',
             ]
         );
         $commands = $this->config['deploy'];
@@ -268,18 +268,11 @@ class Workflow
 
     private function execCmd(array $command, string $directory = null, array $env = null, $input = null, ?float $timeout = 60)
     {
-        $this->output->writeln(implode(' ', $command), OutputInterface::VERBOSITY_DEBUG);
+        $this->output->writeln('<bg=green;fg=white>' . implode(' ', $command) . '</>', OutputInterface::VERBOSITY_DEBUG);
         $process = new Process($command, $directory, $env, $input, $timeout);
-        $process->run(function ($type, $buffer) {
+        $process->mustRun(function ($type, $buffer) {
             $this->output->writeln($buffer);
-            // if (Process::ERR === $type) {
-            //     $this->output->writeln($buffer);
-            // } else {
-            //     $this->output->writeln($buffer);
-            // }
         });
-        $process->mustRun();
-        $this->output->writeln($process->getOutput());
         $this->output->writeln('<question>Exit code: ' . $process->getExitCode() . '</question>');
     }
 
