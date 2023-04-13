@@ -266,7 +266,7 @@ class Workflow
         $this->execCmd($command, $directory, null, null, 0);
     }
 
-    private function execCmd(array $command, string $directory = null, array $env = null, $input = null, ?float $timeout = 60)
+    private function execCmd(array $command, string $directory = null, array $env = null, $input = null, ?float $timeout = 120)
     {
         $this->output->writeln('<bg=green;fg=white>' . implode(' ', $command) . '</>', OutputInterface::VERBOSITY_DEBUG);
         $process = new Process($command, $directory, $env, $input, $timeout);
