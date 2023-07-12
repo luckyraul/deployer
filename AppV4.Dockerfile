@@ -1,8 +1,8 @@
 FROM debian:bullseye-slim
 
-MAINTAINER Nikita Tarasov <nikita@mygento.ru>
+MAINTAINER Nikita Tarasov <nikita@mygento.com>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.13.0 WAYPOINT_VERSION=0.10.5 NOMAD_VERSION=1.5.1 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.14.0 NOMAD_VERSION=1.5.6 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -32,12 +32,6 @@ RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_
     mv vault /usr/local/bin/vault && \
     chmod +x /usr/local/bin/vault && \
     rm vault_${VAULT_VERSION}_linux_amd64.zip
-
-RUN wget -q https://releases.hashicorp.com/waypoint/${WAYPOINT_VERSION}/waypoint_${WAYPOINT_VERSION}_linux_amd64.zip && \
-    unzip waypoint_${WAYPOINT_VERSION}_linux_amd64.zip && \
-    mv waypoint /usr/local/bin/waypoint && \
-    chmod +x /usr/local/bin/waypoint && \
-    rm waypoint_${WAYPOINT_VERSION}_linux_amd64.zip
 
 RUN wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip && \
     unzip nomad_${NOMAD_VERSION}_linux_amd64.zip && \

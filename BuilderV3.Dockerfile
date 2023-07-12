@@ -1,8 +1,8 @@
-FROM docker:20-git
+FROM docker:19-git
 
 MAINTAINER Nikita Tarasov <nikita@mygento.ru>
 
-ENV VAULT_VERSION=1.12.2 WAYPOINT_VERSION=0.10.5 NOMAD_VERSION=1.4.3 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
+ENV VAULT_VERSION=1.14.0 WAYPOINT_VERSION=0.10.5 NOMAD_VERSION=1.5.6 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
 
 COPY --from=hairyhenderson/gomplate:v3.11.3 /gomplate /bin/gomplate
 
@@ -26,7 +26,6 @@ RUN wget -q https://releases.hashicorp.com/levant/${LEVANT_VERSION}/levant_${LEV
 
 RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
     wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk && \
-    apk del libc6-compat && \
     apk add --no-cache --force-overwrite glibc-2.34-r0.apk && \
     rm glibc-2.34-r0.apk && \
     wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip && \
@@ -42,8 +41,7 @@ RUN wget -q https://github.com/hashicorp/nomad-pack/releases/download/nightly/no
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
-RUN apk add --no-cache php7-json php7-curl php7-iconv php7-mbstring php7-openssl php7-simplexml php7-phar php7-zip php7-tokenizer php7-xmlwriter curl php7-pecl-imagick --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing && \
-    ln -s /usr/bin/php7 /usr/bin/php && \
+RUN apk add --no-cache php7-json php7-curl php7-iconv php7-mbstring php7-openssl php7-simplexml php7-phar php7-zip php7-tokenizer php7-xmlwriter curl php7-pecl-imagick && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \
     composer global require guzzlehttp/guzzle && \
