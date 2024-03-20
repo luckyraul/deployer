@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 
 <?php
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Jumbojett\OpenIDConnectClient;
@@ -50,7 +51,7 @@ class UploadPackageCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $type = $input->getArgument('type');
         $dist = false;
@@ -94,13 +95,13 @@ class UploadPackageCommand extends Command
             $body = fopen($file, 'r');
             $query = '?' . http_build_query(
                 array_merge(
-                        [
-                            'filename' => $filename,
-                        ],
-                        $dist ? [
+                    [
+                        'filename' => $filename,
+                    ],
+                    $dist ? [
                         'dist' => $dist,
-                        ] : []
-                    )
+                    ] : []
+                )
             );
 
             try {
@@ -115,8 +116,8 @@ class UploadPackageCommand extends Command
             } catch (ClientException $e) {
                 $output->writeln(
                     $service . $url
-                    . ' invalid http response: ' .
-                    $e->getResponse()->getStatusCode()
+                        . ' invalid http response: ' .
+                        $e->getResponse()->getStatusCode()
                 );
                 continue;
             }

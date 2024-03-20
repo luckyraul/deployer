@@ -32,7 +32,7 @@ class Upload extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $type = $input->getArgument('type');
         $dist = false;
@@ -100,8 +100,8 @@ class Upload extends Command
             } catch (ClientException $e) {
                 $output->writeln(
                     $service . $url
-                    . ' invalid http response: ' .
-                    $e->getResponse()->getStatusCode()
+                        . ' invalid http response: ' .
+                        $e->getResponse()->getStatusCode()
                 );
                 continue;
             }

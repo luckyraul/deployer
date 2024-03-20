@@ -13,16 +13,16 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - 'v3'
           - 'v4'
+          - 'v5'
     steps:
-      - uses: actions/checkout@v3
-      - name: Build Image V3
-        run: docker build -t mygento/deployer:${{ matrix.version }} -f AppV3.Dockerfile .
-        if: matrix.version == 'v3'
+      - uses: actions/checkout@v4
       - name: Build Image V4
         run: docker build -t mygento/deployer:${{ matrix.version }} -f AppV4.Dockerfile .
         if: matrix.version == 'v4'
+      - name: Build Image V5
+        run: docker build -t mygento/deployer:${{ matrix.version }} -f AppV5.Dockerfile .
+        if: matrix.version == 'v5'
       - name: Test php
         run: docker run --rm mygento/deployer:${{ matrix.version }} php -v
       - name: Test node
@@ -49,7 +49,7 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} gomplate -v
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -84,14 +84,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete untagged ghcr LR
-        uses: Chizkiyahu/delete-untagged-ghcr-action@v2
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v3
         with:
           token: ${{ secrets.CR_PAT }}
           repository_owner: ${{ github.repository_owner }}
           owner_type: user
           package_name: deployer
       - name: Delete untagged ghcr Mygento
-        uses: Chizkiyahu/delete-untagged-ghcr-action@v2
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v3
         with:
           token: ${{ secrets.CR_PAT }}
           repository_owner: mygento

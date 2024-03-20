@@ -2,7 +2,7 @@ FROM debian:bullseye-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.com>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.14.0 NOMAD_VERSION=1.5.6 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.0.1-techpreview.4
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.14.0 NOMAD_VERSION=1.5.6 LEVANT_VERSION=0.3.2 NOMADPACK_VERSION=0.1.0
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -21,11 +21,11 @@ RUN apt-get -qqy install curl wget \
   && wget -qO- https://deb.nodesource.com/setup_16.x | bash - \
   && apt-get -qqy install nodejs \
   && apt-get clean \
-  && npm install --global npm \
+  && npm install --global npm@next-9 \
   && npm install --global yarn \
   && npm install --global gulp-cli
 
-COPY --from=hairyhenderson/gomplate:v3.11.3 /gomplate /bin/gomplate
+COPY --from=hairyhenderson/gomplate:v3.11.7 /gomplate /bin/gomplate
 
 RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
     unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
@@ -39,7 +39,7 @@ RUN wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_
     chmod +x /usr/local/bin/nomad && \
     rm nomad_${NOMAD_VERSION}_linux_amd64.zip
 
-RUN wget -q https://github.com/hashicorp/nomad-pack/releases/download/nightly/nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip && \
+RUN wget -q https://releases.hashicorp.com/nomad-pack/${NOMADPACK_VERSION}/nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip && \
     unzip nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip && \
     mv nomad-pack /usr/local/bin/nomad-pack && \
     chmod +x /usr/local/bin/nomad-pack && \
