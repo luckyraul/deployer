@@ -69,8 +69,6 @@ RUN apt-get -qqy install curl apt-transport-https lsb-release ca-certificates \
   && rm -fR ~/.cache/composer \
   && echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' >> ~/.bashrc
 
-ADD upload_package.php /usr/local/bin/upload_package
-
 ADD composer.json /opt/deployer/composer.json
 ADD bin /opt/deployer/bin/
 ADD src /opt/deployer/src/

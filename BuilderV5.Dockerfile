@@ -50,8 +50,6 @@ RUN apk add --no-cache ruby && \
     gem install -N bundler && \
     gem specific_install https://github.com/luckyraul/mina.git relative_path
 
-ADD upload_package.php /usr/local/bin/upload_package
-
 ADD composer.json /opt/deployer/composer.json
 ADD bin /opt/deployer/bin/
 ADD src /opt/deployer/src/

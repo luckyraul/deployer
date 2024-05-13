@@ -238,7 +238,7 @@ class Workflow
             null,
             null,
             '--ref=latest',
-            '--parser-v1'
+            '--parser-v1',
         ];
 
         if ($server) {

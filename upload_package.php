@@ -30,6 +30,9 @@ if (file_exists('vendor/autoload.php')) {
     require_once $rootAutoloadFile2;
 }
 
+/**
+ * @deprecated
+ */
 class UploadPackageCommand extends Command
 {
     protected static $defaultName = 'upload';

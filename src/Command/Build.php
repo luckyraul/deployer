@@ -3,12 +3,14 @@
 namespace Mygento\Deployer\Command;
 
 use Mygento\Deployer\Model\Workflow;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'deploy:build')]
 class Build extends Command
 {
     protected function configure()

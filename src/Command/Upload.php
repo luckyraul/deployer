@@ -5,18 +5,19 @@ namespace Mygento\Deployer\Command;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Jumbojett\OpenIDConnectClient;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'upload')]
 class Upload extends Command
 {
-    protected static $defaultName = 'upload';
-
     protected function configure()
     {
+        $this->setName('upload');
         $this->setDescription('Upload atrifacts');
         $this->addArgument('type', InputArgument::REQUIRED, 'Artifact type');
         $this->addArgument(
@@ -40,7 +41,18 @@ class Upload extends Command
             case 'private_apt':
             case 'public_apt':
                 $scope = [$type];
-                $files = $input->getArgument('files');
+                $files = array_merge(...array_map(
+                    fn ($t) => array_map(
+                        'trim',
+                        explode(',', $t) ?? ''
+                    ),
+                    array_map(
+                        'trim',
+                        array_filter(
+                            $input->getArgument('files') ?? []
+                        )
+                    )
+                ));
                 $dist = $input->getOption('distro');
                 $url = '/repository/upload/' . $scope[0];
                 break;
@@ -117,9 +129,7 @@ class Upload extends Command
         $realm = getenv('REALM');
 
         $oidc = new OpenIDConnectClient($realm, $login, $pass);
-        foreach ($scopes as $sc) {
-            $oidc->addScope($sc);
-        }
+        $oidc->addScope($scopes);
         $result = $oidc->requestClientCredentialsToken();
         if (!$result || !isset($result->access_token)) {
             return false;
