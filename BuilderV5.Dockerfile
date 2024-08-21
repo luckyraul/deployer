@@ -2,7 +2,7 @@ FROM docker:25-git
 
 MAINTAINER Nikita Tarasov <nikita@mygento.com>
 
-ENV VAULT_VERSION=1.15.6 NOMAD_VERSION=1.7.6 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0 GLIBC_VERSION=2.34-r0
+ENV VAULT_VERSION=1.17.3 NOMAD_VERSION=1.8.3 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0 GLIBC_VERSION=2.34-r0
 
 COPY --from=hairyhenderson/gomplate:v3.11.7 /gomplate /bin/gomplate
 
@@ -23,7 +23,7 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     apk add --no-cache --force-overwrite glibc-${GLIBC_VERSION}.apk && \
     rm glibc-${GLIBC_VERSION}.apk && \
     wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip && \
-    unzip nomad_${NOMAD_VERSION}_linux_amd64.zip && \
+    unzip -o nomad_${NOMAD_VERSION}_linux_amd64.zip && \
     mv nomad /usr/local/bin/nomad && \
     chmod +x /usr/local/bin/nomad && \
     /usr/local/bin/nomad -v && \
@@ -36,7 +36,7 @@ RUN wget -q https://releases.hashicorp.com/nomad-pack/${NOMADPACK_VERSION}/nomad
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
 RUN apk add --no-cache php83-curl php83-iconv php83-mbstring php83-simplexml php83-openssl php83-phar php83-zip php83-xmlwriter php83-tokenizer curl php83-pecl-imagick && \
-    ln -s /usr/bin/php83 /usr/bin/php && \
+    # ln -s /usr/bin/php83 /usr/bin/php && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \
     composer global require guzzlehttp/guzzle && \

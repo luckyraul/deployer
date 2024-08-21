@@ -1,4 +1,4 @@
-FROM docker:24-git
+FROM docker:23-git
 
 MAINTAINER Nikita Tarasov <nikita@mygento.com>
 
@@ -42,7 +42,7 @@ RUN wget -q https://releases.hashicorp.com/nomad-pack/${NOMADPACK_VERSION}/nomad
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
 RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-simplexml php81-openssl php81-phar php81-zip php81-xmlwriter php81-tokenizer curl php81-pecl-imagick && \
-    ln -s /usr/bin/php81 /usr/bin/php && \
+    # ln -s /usr/bin/php81 /usr/bin/php && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \
     composer global require guzzlehttp/guzzle && \

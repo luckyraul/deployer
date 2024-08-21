@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.com>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.15.6 NOMAD_VERSION=1.7.6 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.17.3 NOMAD_VERSION=1.8.3 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \
@@ -34,7 +34,7 @@ RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_
     rm vault_${VAULT_VERSION}_linux_amd64.zip
 
 RUN wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip && \
-    unzip nomad_${NOMAD_VERSION}_linux_amd64.zip && \
+    unzip -o nomad_${NOMAD_VERSION}_linux_amd64.zip && \
     mv nomad /usr/local/bin/nomad && \
     chmod +x /usr/local/bin/nomad && \
     rm nomad_${NOMAD_VERSION}_linux_amd64.zip

@@ -129,14 +129,20 @@ class Workflow
         $tag = $this->replaceVars($tagN);
         $directory = $config['path'] ?? null;
         $env = null;
-        $buildkit = $config['buildkit'] ?? true;
+        $buildkit = $config['buildkit'] ?? false; // for legacy only
         if ($buildkit) {
             $env['DOCKER_BUILDKIT'] = 1;
         }
         $filename = $config['file'] ?? 'Dockerfile';
-        $command = ['docker', 'build', '--tag', $tag, '-f', $filename, '.'];
 
-        $this->execCmd($command, $directory, $env, null, null);
+        $command = ['docker', 'build', null, null, '--tag', $tag, '-f', $filename, '.'];
+        $secret = $config['secret'] ?? null;
+        if ($secret) {
+            $command[2] = '--secret';
+            $command[3] = $secret;
+        }
+
+        $this->execCmd(array_filter($command), $directory, $env, null, null);
         $this->artifacts[$name] = $tag;
     }
 
