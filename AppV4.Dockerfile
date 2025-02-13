@@ -18,7 +18,7 @@ RUN apt-get install -qqy sudo git jq unzip ruby && \
     gem specific_install https://github.com/luckyraul/mina.git relative_path
 
 RUN apt-get -qqy install curl wget \
-  && wget -qO- https://deb.nodesource.com/setup_16.x | bash - \
+  && wget -qO- https://deb.nodesource.com/setup_18.x | bash - \
   && apt-get -qqy install nodejs \
   && apt-get clean \
   && npm install --global npm@next-9 \

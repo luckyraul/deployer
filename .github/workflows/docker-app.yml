@@ -1,4 +1,4 @@
-name: Deployer App
+name: App Deployer
 
 on:
   workflow_dispatch:
@@ -23,6 +23,8 @@ jobs:
       - name: Build Image V5
         run: docker build -t mygento/deployer:${{ matrix.version }} -f AppV5.Dockerfile .
         if: matrix.version == 'v5'
+      - name: Test Git
+        run: docker run --rm mygento/deployer:${{ matrix.version }} git --version
       - name: Test php
         run: docker run --rm mygento/deployer:${{ matrix.version }} php -v
       - name: Test node

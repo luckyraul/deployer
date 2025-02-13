@@ -31,6 +31,8 @@ jobs:
         run: docker run --rm mygento/deployer:${{ matrix.version }} levant -v
       - name: Test Nomad Pack
         run: docker run --rm mygento/deployer:${{ matrix.version }} nomad-pack version
+      - name: Test Git
+        run: docker run --rm mygento/deployer:${{ matrix.version }} git --version
       - name: Test Gomplate
         run: docker run --rm mygento/deployer:${{ matrix.version }} gomplate -v
       - name: Test PHP

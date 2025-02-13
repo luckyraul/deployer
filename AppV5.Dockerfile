@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 MAINTAINER Nikita Tarasov <nikita@mygento.com>
 
-ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.17.3 NOMAD_VERSION=1.8.3 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0
+ENV DEBIAN_FRONTEND=noninteractive VAULT_VERSION=1.18.3 NOMAD_VERSION=1.8.4 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0
 
 RUN apt-get -qq update && \
   apt-get install -qqy locales && apt-get clean && \

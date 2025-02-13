@@ -1,10 +1,12 @@
-FROM docker:25-git
+FROM docker:26
 
 MAINTAINER Nikita Tarasov <nikita@mygento.com>
 
-ENV VAULT_VERSION=1.17.3 NOMAD_VERSION=1.8.3 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0 GLIBC_VERSION=2.34-r0
+ENV VAULT_VERSION=1.18.3 NOMAD_VERSION=1.8.4 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0 GLIBC_VERSION=2.34-r0
 
 COPY --from=hairyhenderson/gomplate:v3.11.7 /gomplate /bin/gomplate
+
+RUN apk add --no-cache git
 
 RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
     unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
