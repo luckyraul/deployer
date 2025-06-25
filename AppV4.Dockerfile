@@ -17,7 +17,7 @@ RUN apt-get install -qqy sudo git jq unzip ruby && \
     gem install --no-document bundler && \
     gem specific_install https://github.com/luckyraul/mina.git relative_path
 
-RUN apt-get -qqy install curl wget \
+RUN apt-get -qqy install curl wget rsync \
   && wget -qO- https://deb.nodesource.com/setup_18.x | bash - \
   && apt-get -qqy install nodejs \
   && apt-get clean \
