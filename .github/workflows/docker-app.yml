@@ -16,7 +16,7 @@ jobs:
           - 'v4'
           - 'v5'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build Image V4
         run: docker build -t mygento/deployer:${{ matrix.version }} -f AppV4.Dockerfile .
         if: matrix.version == 'v4'
