@@ -2,20 +2,20 @@ FROM docker:26
 
 MAINTAINER Nikita Tarasov <nikita@mygento.com>
 
-ENV VAULT_VERSION=1.18.3 NOMAD_VERSION=1.8.4 LEVANT_VERSION=0.3.3 NOMADPACK_VERSION=0.1.0 GLIBC_VERSION=2.34-r0
+ENV VAULT_VERSION=1.21.4 NOMAD_VERSION=1.9.7 LEVANT_VERSION=0.4.0 NOMADPACK_VERSION=0.1.0 GLIBC_VERSION=2.34-r0
 
 COPY --from=hairyhenderson/gomplate:v3.11.7 /gomplate /bin/gomplate
 
 RUN apk add --no-cache git
 
 RUN wget -q https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
-    unzip vault_${VAULT_VERSION}_linux_amd64.zip && \
+    unzip -o vault_${VAULT_VERSION}_linux_amd64.zip && \
     mv vault /usr/local/bin/vault && \
     chmod +x /usr/local/bin/vault && \
     rm vault_${VAULT_VERSION}_linux_amd64.zip
 
 RUN wget -q https://releases.hashicorp.com/levant/${LEVANT_VERSION}/levant_${LEVANT_VERSION}_linux_amd64.zip && \
-    unzip levant_${LEVANT_VERSION}_linux_amd64.zip && \
+    unzip -o levant_${LEVANT_VERSION}_linux_amd64.zip && \
     mv levant /usr/local/bin/levant && \
     chmod +x /usr/local/bin/levant && \
     rm levant_${LEVANT_VERSION}_linux_amd64.zip
@@ -32,7 +32,7 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     rm nomad_${NOMAD_VERSION}_linux_amd64.zip
 
 RUN wget -q https://releases.hashicorp.com/nomad-pack/${NOMADPACK_VERSION}/nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip && \
-    unzip nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip && \
+    unzip -o nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip && \
     mv nomad-pack /usr/local/bin/nomad-pack && \
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip

@@ -16,7 +16,7 @@ jobs:
           - 'v4-dind'
           - 'v5-dind'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build Image V4
         run: docker build -t mygento/deployer:${{ matrix.version }} -f BuilderV4.Dockerfile .
         if: matrix.version == 'v4-dind'
@@ -50,7 +50,7 @@ jobs:
       - name: Test yarn
         run: docker run --rm mygento/deployer:${{ matrix.version }} yarn -v
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
