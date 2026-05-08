@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'deploy:deploy')]
 class Deploy extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('deploy:deploy')

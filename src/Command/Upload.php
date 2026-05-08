@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'upload')]
 class Upload extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('upload');
         $this->setDescription('Upload atrifacts');
@@ -122,7 +122,7 @@ class Upload extends Command
         return 0;
     }
 
-    private function getToken(array $scopes)
+    private function getToken(array $scopes): ?string
     {
         $login = getenv('REALM_LOGIN');
         $pass = getenv('REALM_PASS');

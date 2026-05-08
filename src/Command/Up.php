@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'up')]
 class Up extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('up')
