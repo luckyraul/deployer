@@ -13,42 +13,40 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - 'v4-dind'
-          - 'v5-dind'
+          - 'v4'
+          - 'v5'
+          - 'v6'
+          - 'v7'
     steps:
       - uses: actions/checkout@v6
-      - name: Build Image V4
-        run: docker build -t mygento/deployer:${{ matrix.version }} -f BuilderV4.Dockerfile .
-        if: matrix.version == 'v4-dind'
-      - name: Build Image V5
-        run: docker build -t mygento/deployer:${{ matrix.version }} -f BuilderV5.Dockerfile .
-        if: matrix.version == 'v5-dind'
+      - name: Build Image ${{ matrix.version }}
+        run: docker build -t mygento/deployer:${{ matrix.version }}-dind -f Builder-${{ matrix.version }}.Dockerfile .
       - name: Test Vault
-        run: docker run --rm mygento/deployer:${{ matrix.version }} vault -v
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind vault -v
       - name: Test Nomad
-        run: docker run --rm mygento/deployer:${{ matrix.version }} nomad -v
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind nomad -v
       - name: Test Levant
-        run: docker run --rm mygento/deployer:${{ matrix.version }} levant -v
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind levant -v
       - name: Test Nomad Pack
-        run: docker run --rm mygento/deployer:${{ matrix.version }} nomad-pack version
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind nomad-pack version
       - name: Test Git
-        run: docker run --rm mygento/deployer:${{ matrix.version }} git --version
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind git --version
       - name: Test Gomplate
-        run: docker run --rm mygento/deployer:${{ matrix.version }} gomplate -v
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind gomplate --version
       - name: Test PHP
-        run: docker run --rm mygento/deployer:${{ matrix.version }} php -v
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind php -v
       - name: Test Composer
-        run: docker run --rm mygento/deployer:${{ matrix.version }} composer -V
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind composer -V
       - name: Test Composer Config
-        run: docker run --rm mygento/deployer:${{ matrix.version }} composer config --list --global
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind composer config --list --global
       - name: Test node
-        run: docker run --rm mygento/deployer:${{ matrix.version }} /usr/bin/node -v
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind /usr/bin/node -v
       - name: Test Deployer
-        run: docker run --rm mygento/deployer:${{ matrix.version }} deployer -V
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind deployer -V
       - name: Test npm
-        run: docker run --rm mygento/deployer:${{ matrix.version }} npm -v
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind npm -v
       - name: Test yarn
-        run: docker run --rm mygento/deployer:${{ matrix.version }} yarn -v
+        run: docker run --rm mygento/deployer:${{ matrix.version }}-dind yarn -v
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v4
         with:
@@ -58,8 +56,8 @@ jobs:
 
       - name: Push image
         run: |
-          export IMAGE_NAME=mygento/deployer:${{ matrix.version }}
-          export IMAGE_ID=ghcr.io/luckyraul/deployer:${{ matrix.version }}
+          export IMAGE_NAME=mygento/deployer:${{ matrix.version }}-dind
+          export IMAGE_ID=ghcr.io/luckyraul/deployer:${{ matrix.version }}-dind
 
           # Change all uppercase to lowercase
           export IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
@@ -70,8 +68,8 @@ jobs:
           docker push $IMAGE_ID
       - name: Push image Mygento
         run: |
-          export IMAGE_NAME=mygento/deployer:${{ matrix.version }}
-          export IMAGE_ID=ghcr.io/mygento/deployer:${{ matrix.version }}
+          export IMAGE_NAME=mygento/deployer:${{ matrix.version }}-dind
+          export IMAGE_ID=ghcr.io/mygento/deployer:${{ matrix.version }}-dind
 
           # Change all uppercase to lowercase
           export IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')

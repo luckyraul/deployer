@@ -18,8 +18,8 @@ RUN apt-get install -qqy sudo git jq unzip ruby && \
     gem specific_install https://github.com/luckyraul/mina.git relative_path
 
 RUN apt-get -qqy install curl wget rsync \
-  && wget -qO- https://deb.nodesource.com/setup_24.x | bash - \
-  && apt-get -qqy install nodejs \
+  && wget -qO- https://deb.nodesource.com/setup_22.x | bash - \
+  && apt-get -qqy install nodejs=22.22.1-1nodesource1 \
   && apt-get clean \
   && npm install --global npm \
   && npm install --global yarn \
