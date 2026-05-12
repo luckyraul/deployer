@@ -19,7 +19,7 @@ RUN apt-get install -qqy sudo git jq unzip ruby && \
 
 RUN apt-get -qqy install curl wget rsync \
   && wget -qO- https://deb.nodesource.com/setup_20.x | bash - \
-  && apt-get -qqy install nodejs \
+  && apt-get -qqy install nodejs=20.18.3-1nodesource1 \
   && apt-get clean \
   && npm install --global npm \
   && npm install --global yarn \

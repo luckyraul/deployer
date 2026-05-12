@@ -83,18 +83,18 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - name: Delete untagged ghcr LR
+      - name: Delete untagged GHCR LR
         uses: Chizkiyahu/delete-untagged-ghcr-action@v6
         with:
           token: ${{ secrets.CR_PAT }}
           repository_owner: ${{ github.repository_owner }}
           owner_type: user
           package_name: deployer
-      - name: Delete untagged ghcr Mygento
+      - name: Delete untagged GHCR Mygento
         uses: Chizkiyahu/delete-untagged-ghcr-action@v6
         with:
           token: ${{ secrets.CR_PAT }}
           repository_owner: mygento
-          repository: mygento/deployer
+          repository: ''
           owner_type: org
           package_name: deployer

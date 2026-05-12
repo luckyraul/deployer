@@ -78,6 +78,3 @@ RUN cd /opt/deployer/ \
   && rm -fR ~/.composer/cache \
   && echo 'export PATH="$PATH:/opt/deployer/bin"' >> ~/.bashrc \
   && ln -s /opt/deployer/bin/deployer /usr/local/bin/deployer
-
-RUN mkdir /var/www && chown www-data:www-data /var/www
-USER www-data
