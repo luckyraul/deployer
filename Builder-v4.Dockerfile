@@ -41,7 +41,7 @@ RUN wget -q https://releases.hashicorp.com/nomad-pack/${NOMADPACK_VERSION}/nomad
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
-RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-simplexml php81-openssl php81-phar php81-zip php81-xmlwriter php81-tokenizer curl php81-pecl-imagick && \
+RUN apk add --no-cache php81-curl php81-iconv php81-mbstring php81-xml php81-simplexml php81-openssl php81-phar php81-zip php81-xmlwriter php81-tokenizer curl php81-pecl-imagick && \
     # ln -s /usr/bin/php81 /usr/bin/php && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \

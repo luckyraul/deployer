@@ -37,8 +37,8 @@ RUN wget -q https://releases.hashicorp.com/nomad-pack/${NOMADPACK_VERSION}/nomad
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
-RUN apk add --no-cache php85-curl php85-iconv php85-mbstring php85-simplexml php85-openssl php85-phar php85-zip php85-xmlwriter php85-tokenizer curl php85-pecl-imagick && \
-    ln -s /usr/bin/php85 /usr/bin/php && \
+RUN apk add --no-cache php85-curl php85-iconv php85-mbstring php85-xml php85-simplexml php85-openssl php85-phar php85-zip php85-xmlwriter php85-tokenizer curl php85-pecl-imagick && \
+    # ln -s /usr/bin/php85 /usr/bin/php && \
     curl -L https://getcomposer.org/download/latest-2.2.x/composer.phar -o /usr/local/bin/composer && \
     chmod +x /usr/local/bin/composer && \
     composer global require symfony/console && \

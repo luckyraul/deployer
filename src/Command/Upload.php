@@ -4,13 +4,17 @@ namespace Mygento\Deployer\Command;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Jumbojett\OpenIDConnectClient;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use function Jumbojett\base64url_decode;
 
 #[AsCommand(name: 'upload')]
 class Upload extends Command
@@ -23,13 +27,13 @@ class Upload extends Command
         $this->addArgument(
             'files',
             InputArgument::REQUIRED | InputArgument::IS_ARRAY,
-            'Artifact files'
+            'Artifact files',
         );
         $this->addOption(
             'distro',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Apt distro'
+            'Apt distro',
         );
     }
 
@@ -41,25 +45,27 @@ class Upload extends Command
             case 'private_apt':
             case 'public_apt':
                 $scope = [$type];
-                $files = array_merge(...array_map(
-                    fn ($t) => array_map(
-                        'trim',
-                        explode(',', $t) ?? ''
+                $files = array_merge(
+                    ...array_map(
+                        fn($t) => array_map(
+                            'trim',
+                            explode(',', $t),
+                        ),
+                        array_map(
+                            'trim',
+                            array_filter(
+                                $input->getArgument('files') ?? [],
+                            ),
+                        ),
                     ),
-                    array_map(
-                        'trim',
-                        array_filter(
-                            $input->getArgument('files') ?? []
-                        )
-                    )
-                ));
+                );
                 $dist = $input->getOption('distro');
                 $url = '/repository/upload/' . $scope[0];
                 break;
             default:
                 $output->writeln('invalid type');
 
-                return 1;
+                return Command::FAILURE;
         }
 
         $token = $this->getToken($scope);
@@ -67,15 +73,19 @@ class Upload extends Command
         if (!$token) {
             $output->writeln('Token Invalid');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $service = getenv('SERVICE');
         if (!$service) {
             $output->writeln('Service Invalid');
 
-            return 1;
+            return Command::FAILURE;
         }
+        $progressBar = new ProgressBar($output, 0);
+        $progressBar->setFormat(
+            ' %message% [%bar%] %percent:3s%%',
+        );
 
         foreach ($files as $file) {
             if (!$file || !file_exists($file)) {
@@ -83,11 +93,21 @@ class Upload extends Command
                 continue;
             }
 
-            $client = new Client([
-                'base_uri' => $service,
-            ]);
-
+            if ($this->validateJWTForExpiry($token)) {
+                $token = $this->getToken($scope);
+            }
             $filename = basename($file);
+
+            $progressBar->setMessage(sprintf('Uploading %s ', $filename));
+            $progressBar->setMaxSteps(0);
+            $progressBar->start();
+
+            $client = new Client(
+                [
+                    'base_uri' => $service,
+                ],
+            );
+
             $body = fopen($file, 'r');
             $query = '?' . http_build_query(
                 array_merge(
@@ -96,30 +116,54 @@ class Upload extends Command
                     ],
                     $dist ? [
                         'dist' => $dist,
-                    ] : []
-                )
+                    ] : [],
+                ),
             );
 
             try {
-                $client->request('POST', $url . $query, [
-                    'body' => $body,
-                    'headers' => [
-                        'Accept' => 'application/json',
-                        'Authorization' => 'Bearer ' . $token,
+                $client->request(
+                    'POST',
+                    $url . $query,
+                    [
+                        'body' => $body,
+                        'headers' => [
+                            'Accept' => 'application/json',
+                            'Authorization' => 'Bearer ' . $token,
+                        ],
+                        'progress' => function (
+                            int $downloadTotal,
+                            int $downloaded,
+                            int $uploadTotal,
+                            int $uploaded,
+                        ) use ($progressBar): void {
+                            if ($uploadTotal > 0) {
+                                $progressBar->setMaxSteps($uploadTotal);
+                                $progressBar->setProgress($uploaded);
+                            }
+                        },
                     ],
-                ]);
+                );
+                $output->writeln('');
                 $output->writeln('uploaded ' . $filename . ' to ' . $service . $url);
+            } catch (ServerException $e) {
+                $output->writeln(
+                    $service . $url
+                        . ' invalid http response: '
+                        . $e->getResponse()->getStatusCode(),
+                );
+                continue;
             } catch (ClientException $e) {
                 $output->writeln(
                     $service . $url
-                        . ' invalid http response: ' .
-                        $e->getResponse()->getStatusCode()
+                        . ' invalid http response: '
+                        . $e->getResponse()->getStatusCode(),
                 );
                 continue;
             }
+            $progressBar->finish();
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function getToken(array $scopes): ?string
@@ -132,9 +176,23 @@ class Upload extends Command
         $oidc->addScope($scopes);
         $result = $oidc->requestClientCredentialsToken();
         if (!$result || !isset($result->access_token)) {
-            return false;
+            return null;
         }
 
         return $result->access_token;
+    }
+
+    private function decodeJWT(string $jwt, $section = 1): array
+    {
+        $parts = explode('.', $jwt);
+
+        return json_decode(base64url_decode($parts[$section]), true);
+    }
+
+    private function validateJWTForExpiry(string $jwt): bool
+    {
+        $parts = $this->decodeJWT($jwt);
+
+        return $parts['exp'] <= time();
     }
 }

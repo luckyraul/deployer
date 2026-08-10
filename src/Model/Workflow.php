@@ -10,9 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 class Workflow
 {
     private OutputInterface $output;
-
     private array $config = [];
-
     private array $artifacts = [];
 
     public function __construct(OutputInterface $output)
@@ -42,7 +40,7 @@ class Workflow
     private function readConfig(string $filename)
     {
         $this->config = Yaml::parseFile($filename);
-        //dump($this->config);
+        // dump($this->config);
     }
 
     private function doBuild()
@@ -52,7 +50,7 @@ class Workflow
                 '<bg=blue;fg=white>              </>',
                 '<bg=blue;fg=white> Build Phase  </>',
                 '<bg=blue;fg=white>              </>',
-            ]
+            ],
         );
         foreach ($this->config['build'] ?? [] as $b) {
             $type = $b['type'] ?? null;
@@ -81,7 +79,7 @@ class Workflow
                 '<bg=blue;fg=white>              </>',
                 '<bg=blue;fg=white> Deploy Phase </>',
                 '<bg=blue;fg=white>              </>',
-            ]
+            ],
         );
         $commands = $this->config['deploy'];
         if ($this->hasEnvironments() && null !== $environment) {
@@ -277,9 +275,11 @@ class Workflow
     {
         $this->output->writeln('<bg=green;fg=white>' . implode(' ', $command) . '</>', OutputInterface::VERBOSITY_DEBUG);
         $process = new Process($command, $directory, $env, $input, $timeout);
-        $process->mustRun(function ($type, $buffer) {
-            $this->output->writeln($buffer);
-        });
+        $process->mustRun(
+            function ($type, $buffer) {
+                $this->output->writeln($buffer);
+            },
+        );
         $this->output->writeln('<question>Exit code: ' . $process->getExitCode() . '</question>');
     }
 
@@ -308,11 +308,9 @@ class Workflow
         $pattern = '/\$artifact+\[[\'|\"]([\w]+)[\'|\"]\]/';
         $matches = [];
         preg_match_all($pattern, $text, $matches);
-        if (2 === count($matches)) {
-            foreach ($matches[0] as $i => $r) {
-                $value = $this->artifacts[$matches[1][$i]] ?? '';
-                $text = str_replace($r, $value, $text);
-            }
+        foreach ($matches[0] as $i => $r) {
+            $value = $this->artifacts[$matches[1][$i]] ?? '';
+            $text = str_replace($r, $value, $text);
         }
 
         return $text;

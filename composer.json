@@ -1,14 +1,14 @@
 {
     "require": {
-        "symfony/console": "^5.4",
-        "symfony/yaml": "^5.4",
-        "symfony/process": "^5.4",
+        "symfony/console": "6.4.*",
+        "symfony/yaml": "6.4.*",
+        "symfony/process": "6.4.*",
         "guzzlehttp/guzzle": "^7.5",
-        "jumbojett/openid-connect-php": "^0.9.10"
+        "jumbojett/openid-connect-php": "^1.0.2"
     },
     "require-dev": {
-        "mygento/symfony-standard": "^5.0.0",
-        "symfony/var-dumper": "5.4.*"
+        "mygento/symfony-standard": "^7.0.0|^8.0.0",
+        "symfony/var-dumper": "6.4.*"
     },
     "autoload": {
         "psr-4": {

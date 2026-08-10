@@ -37,7 +37,7 @@ RUN wget -q https://releases.hashicorp.com/nomad-pack/${NOMADPACK_VERSION}/nomad
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
-RUN apk add --no-cache php84-curl php84-iconv php84-mbstring php84-simplexml php84-openssl php84-phar php84-zip php84-xmlwriter php84-tokenizer curl php84-pecl-imagick && \
+RUN apk add --no-cache php84-curl php84-iconv php84-mbstring php84-xml php84-simplexml php84-openssl php84-phar php84-zip php84-xmlwriter php84-tokenizer curl php84-pecl-imagick && \
     ln -s /usr/bin/php84 /usr/bin/php && \
     curl -L https://getcomposer.org/download/latest-2.2.x/composer.phar -o /usr/local/bin/composer && \
     chmod +x /usr/local/bin/composer && \

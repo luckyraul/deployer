@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Jeeves">
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/test/Expectations*</exclude-pattern>
+    <rule ref="PSR12">
+        <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore"/>
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine" />
+        <exclude name="PSR12.Operators.OperatorSpacing.NoSpaceBefore"/>
+    </rule>
+</ruleset>

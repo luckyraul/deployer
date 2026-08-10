@@ -20,11 +20,13 @@ class Github extends Command
         $this
             ->setName('github-release')
             ->setDescription('Fetch Github release')
-            ->setDefinition([
-                new InputArgument('repo', InputArgument::REQUIRED, 'repo'),
-                new InputOption('extension', null, InputOption::VALUE_OPTIONAL, 'release extension', null),
-                new InputOption('arch', null, InputOption::VALUE_OPTIONAL, 'release arch', null),
-            ]);
+            ->setDefinition(
+                [
+                    new InputArgument('repo', InputArgument::REQUIRED, 'repo'),
+                    new InputOption('extension', null, InputOption::VALUE_OPTIONAL, 'release extension', null),
+                    new InputOption('arch', null, InputOption::VALUE_OPTIONAL, 'release arch', null),
+                ],
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -40,13 +42,15 @@ class Github extends Command
         }
         $executor = new GithubApi();
         $release = [];
-        $architectures = array_filter(array_map(
-            'trim',
-            explode(
-                ',',
-                strtolower($arch ?? '')
-            )
-        ));
+        $architectures = array_filter(
+            array_map(
+                'trim',
+                explode(
+                    ',',
+                    strtolower($arch ?? ''),
+                ),
+            ),
+        );
 
         try {
             $release = $executor->findRelease($repo);
@@ -55,17 +59,28 @@ class Github extends Command
             $progressBar->start();
             foreach ($toDownload as $url) {
                 $filename = basename(
-                    parse_url($url, PHP_URL_PATH)
+                    parse_url($url, PHP_URL_PATH),
                 );
                 $progressBar->setMessage('Downloading ' . $filename);
                 $executor->download($url);
                 $progressBar->advance();
             }
-        } catch (GuzzleException|\Throwable $e) {
-            $output->writeln(sprintf(
-                '<error>%s</error>',
-                $e->getMessage()
-            ));
+        } catch (GuzzleException $e) {
+            $output->writeln(
+                sprintf(
+                    '<error>%s</error>',
+                    $e->getMessage(),
+                ),
+            );
+
+            return Command::FAILURE;
+        } catch (\Throwable $e) {
+            $output->writeln(
+                sprintf(
+                    '<error>%s</error>',
+                    $e->getMessage(),
+                ),
+            );
 
             return Command::FAILURE;
         }
@@ -78,25 +93,26 @@ class Github extends Command
         return array_filter(
             $release,
             function (string $assetUrl) use ($ext, $architectures): bool {
-                if ($ext && false === strpos(
-                    $assetUrl,
-                    strtolower('.' . $ext)
-                )) {
+                if (
+                    $ext && false === strpos(
+                        $assetUrl,
+                        strtolower('.' . $ext),
+                    )
+                ) {
                     return false;
                 }
                 if (count($architectures) > 0) {
                     $matched = false;
 
                     foreach (
-                    $architectures
-                    as $architecture
-                ) {
-                        if (
-                        false !== strpos(
-                            $assetUrl,
-                            $architecture
-                        )
+                        $architectures as $architecture
                     ) {
+                        if (
+                            false !== strpos(
+                                $assetUrl,
+                                $architecture,
+                            )
+                        ) {
                             $matched = true;
                             break;
                         }
@@ -108,7 +124,7 @@ class Github extends Command
                 }
 
                 return true;
-            }
+            },
         );
     }
 }

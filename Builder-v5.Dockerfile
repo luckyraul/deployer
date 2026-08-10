@@ -37,7 +37,7 @@ RUN wget -q https://releases.hashicorp.com/nomad-pack/${NOMADPACK_VERSION}/nomad
     chmod +x /usr/local/bin/nomad-pack && \
     rm nomad-pack_${NOMADPACK_VERSION}_linux_amd64.zip
 
-RUN apk add --no-cache php83-curl php83-iconv php83-mbstring php83-simplexml php83-openssl php83-phar php83-zip php83-xmlwriter php83-tokenizer curl php83-pecl-imagick && \
+RUN apk add --no-cache php83-curl php83-iconv php83-mbstring php83-xml php83-simplexml php83-openssl php83-phar php83-zip php83-xmlwriter php83-tokenizer curl php83-pecl-imagick && \
     # ln -s /usr/bin/php83 /usr/bin/php && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     composer global require symfony/console && \

@@ -18,10 +18,12 @@ class Up extends Command
         $this
             ->setName('up')
             ->setDescription('Workflow build, deploy, release')
-            ->setDefinition([
-                new InputArgument('environment', InputArgument::OPTIONAL, 'Environment'),
-                new InputOption('config_file', null, InputOption::VALUE_OPTIONAL, 'config file', null),
-            ]);
+            ->setDefinition(
+                [
+                    new InputArgument('environment', InputArgument::OPTIONAL, 'Environment'),
+                    new InputOption('config_file', null, InputOption::VALUE_OPTIONAL, 'config file', null),
+                ],
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
