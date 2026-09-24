@@ -311,6 +311,7 @@ class Upload extends Command
                     $job['success'] = true;
 
                     $job['progress']->finish();
+                    $output->writeln('');
 
                     if (is_resource($job['resource'])) {
                         fclose($job['resource']);
